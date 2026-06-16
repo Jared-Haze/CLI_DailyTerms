@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.mysql:mysql-connector-j:9.4.0'
     // Use JUnit Jupiter for testing.
     testImplementation libs.junit.jupiter
 

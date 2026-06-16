@@ -3,12 +3,23 @@
  */
 package org.example;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayDeque;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+
+        ArrayDeque<DailyTerm> termsList = DAL.showTerms();
+        for (DailyTerm term : termsList) {
+            System.out.println(term.getTerm());
+        }
+        System.out.println("\nend test");
+
+        
     }
 }

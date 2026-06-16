@@ -1,0 +1,11 @@
+Next Steps:
+☑️make the database
+☑️make the table in database
+☑️outline program v1 functions
+- program methods for functions (DAL).
+    - show all current terms (within 4~6 days old).
+    - add term (user input).
+    - remove term (perm deletes) | user should rarely use, unless mistakenly added or reached mastery in parent topic.
+    - renew term (updates reneweed_date -> shows up again in current terms query).
+    - show "expired" terms ; query for terms older than current cut off (leads to renew option in control flow).
+- add current list of terms to database (using program, to ensure it works properly).

@@ -1,0 +1,23 @@
+CLI daily terms list - Outline
+
+Just to assist (spaced recall) somewhat remembering key concepts/terms
+later | to better remember something when making programs after video
+study. 
+However, super list/key things like "useful string methods" should just 
+have a study method for them, as remembering each individual one is 
+just a sub info piece of the concept of string methods (their importance
+of use in general).
+
+- needs MySQL database connected (to store terms). 
+- CLI based 
+- input anytime (not worry about sifting through and keeping up with papers). 
+
+I chose an ArrayDeque of datastructure for ResultSet from database in 
+case I decide to add a function to see the most recently add term from 
+the list later on.
+
+⭐Database Table structure:
+id | int | auto_increment
+term | varchar(255) 
+created_date | datetime
+reneweed_date | datetime
