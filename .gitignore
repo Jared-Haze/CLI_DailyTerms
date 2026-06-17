@@ -7,5 +7,3 @@ build
 # Ignore Kotlin plugin data
 .kotlin
 
-#ignores JDBC (hard coded auth)
-src/main/java/org/example/JDBC.java
