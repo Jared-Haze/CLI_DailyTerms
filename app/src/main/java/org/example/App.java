@@ -9,17 +9,40 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayDeque;
+import java.util.Scanner;
 
 public class App {
 
     public static void main(String[] args) {
 
+        Scanner scanner = new Scanner(System.in);
+
+        termsDisplay();
+        
+
+        System.out.print("\nDo you wish to add term? (y/n): ");
+        String input = scanner.nextLine();
+
+        if (input.equals("y")) {
+            System.out.println("great! What is the term: ");
+            String newTerm = scanner.nextLine();
+            System.out.println("Your new term is " + newTerm);
+            DAL.addTerm(newTerm);
+            System.out.println("It has been put in the list");
+            termsDisplay();
+        } else {
+            System.out.println("guess not today");
+        }
+
+        System.out.println("ending program");
+
+        scanner.close();
+    }
+
+    public static void termsDisplay() {
         ArrayDeque<DailyTerm> termsList = DAL.showTerms();
         for (DailyTerm term : termsList) {
             System.out.println(term.getTerm());
         }
-        System.out.println("\nend test");
-
-        
     }
 }
