@@ -43,8 +43,10 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 tasks.named('run', JavaExec) {
+    systemProperty 'file.encoding', 'UTF-8'
     standardInput = System.in
 }
+
 
 test {
     enabled = false

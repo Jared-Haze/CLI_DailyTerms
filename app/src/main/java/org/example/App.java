@@ -59,13 +59,13 @@ public class App {
             Long daysOld = Duration.between(term.renewed_date, LocalDateTime.now()).toDays();
             
             if (daysOld == 1 || daysOld == 0) {
-                System.out.println("- " + term.term + "🆕");
+                System.out.println("- " + term.term + "[new]");
             } else if (daysOld <= 4) {
-                System.out.println("- " + term.term + "🗞️");
+                System.out.println("- " + term.term + "[current]");
             } else if (daysOld < 0) {
-                System.out.println("- " + term.term + "🧿 far out (future)");
+                System.out.println("- " + term.term + "[far out (future)]");
             } else if (daysOld == 5) {
-                System.out.println("- " + term.term + "🚩 expires soon (last day)");
+                System.out.println("- " + term.term + "[expires soon (last day)]");
             }
             
         }
