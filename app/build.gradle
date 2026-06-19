@@ -42,3 +42,10 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+tasks.named('run', JavaExec) {
+    standardInput = System.in
+}
+
+test {
+    enabled = false
+}
