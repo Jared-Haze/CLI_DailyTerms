@@ -8,41 +8,133 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.Scanner;
+import java.util.Set;
 
 public class App {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-
-        termsDisplay();
+        homeScreen(scanner);
         
 
+        scanner.close();
+    }
+
+    public static void quitProgram(Scanner scanner) {
+        System.out.println("\nending program");
+        scanner.close();
+        System.exit(0);
+    }
+
+    public static void homeScreen(Scanner scanner) {
+        termsDisplay();
+        System.out.print("\ntype anything to see CLI Daily Terms options:");
+        scanner.nextLine();
+        
+        System.out.println("\nType + enter...\nA: add term\nB: remove term\nC: show expired terms\nQ: quit program");
+        String choiceInput = scanner.nextLine();
+
+        switch (choiceInput.toUpperCase().strip()) {
+            case "A" -> appAddTerm(scanner);
+            case "B" -> appRemoveTerm(scanner);
+            case "C" -> appShowExpired(scanner);
+            case "Q" -> quitProgram(scanner);
+            default -> {
+                System.out.println("Invalid choice.");
+                homeScreen(scanner);
+            }
+        }
+    }
+
+    public static void termsDisplay() {
+        ArrayDeque<DailyTerm> termsList = DAL.showTerms();
+        System.out.println("---Daily-Terms---------------------");
+        for (DailyTerm term : termsList) {
+
+            Long daysOld = Duration.between(term.renewed_date, LocalDateTime.now()).toDays();
+            
+            if (daysOld == 1 || daysOld == 0) {
+                System.out.println("- " + term.term + "🆕");
+            } else if (daysOld <= 4) {
+                System.out.println("- " + term.term + "🗞️");
+            } else if (daysOld < 0) {
+                System.out.println("- " + term.term + "🧿 far out (future)");
+            } else if (daysOld == 5) {
+                System.out.println("- " + term.term + "🚩 expires soon (last day)");
+            }
+            
+        }
+        System.out.println("-----------------------------------");
+    }
+
+    public static void appShowExpired(Scanner scanner) {
+        ArrayDeque<DailyTerm> termsList = DAL.showTerms();
+        System.out.println("---Expired-Terms-------------------");
+        for (DailyTerm term : termsList) {
+
+            Long daysOld = Duration.between(term.renewed_date, LocalDateTime.now()).toDays();
+
+            if (daysOld > 5) {
+                System.out.println("- " + term.term + "✖️");
+            }
+            
+        }
+        System.out.println("-----------------------------------");
+
+        expiredTermChoice(scanner);
+    }
+
+    public static void expiredTermChoice(Scanner scanner) {
+        System.out.println("Type + enter...\nA: renew term\nB: remove term\nC: show current terms");
+        String input = scanner.nextLine();
+        switch (input.toUpperCase().strip()) {
+            case "A" -> appRenewTerm(scanner);
+            case "B" -> appRemoveTerm(scanner);
+            case "C" -> homeScreen(scanner);
+            default -> {
+                System.out.println("Invalid choice. Taking to home screen...");
+                System.out.println("\n");
+                homeScreen(scanner);
+            }
+        }
+    }
+
+    public static void appRenewTerm(Scanner scanner) {
+        System.out.println("enter the term you would like to renew: ");
+        String renewedTerm = scanner.nextLine();
+        DAL.renewTerm(renewedTerm, scanner);
+        System.out.println("\n");
+        homeScreen(scanner);
+    }
+
+    public static void appAddTerm(Scanner scanner) {
         System.out.print("\nDo you wish to add term? (y/n): ");
         String input = scanner.nextLine();
 
         if (input.equals("y")) {
             System.out.println("great! What is the term: ");
             String newTerm = scanner.nextLine();
-            System.out.println("Your new term is " + newTerm);
+            System.out.println("Your new term is: " + newTerm);
             DAL.addTerm(newTerm);
-            System.out.println("It has been put in the list");
-            termsDisplay();
+            System.out.println("It has been put in the list.");
+            System.out.println("\n");
+            homeScreen(scanner);
         } else {
             System.out.println("guess not today");
+            System.out.println("\n");
+            homeScreen(scanner);
         }
-
-        System.out.println("ending program");
-
-        scanner.close();
     }
-
-    public static void termsDisplay() {
-        ArrayDeque<DailyTerm> termsList = DAL.showTerms();
-        for (DailyTerm term : termsList) {
-            System.out.println(term.getTerm());
-        }
+    public static void appRemoveTerm(Scanner scanner) {
+        System.out.println("enter the term you would like to remove: ");
+        String removedTerm = scanner.nextLine();
+        DAL.removeTerm(removedTerm, scanner);
+        System.out.println("\n");
+        homeScreen(scanner);
     }
 }

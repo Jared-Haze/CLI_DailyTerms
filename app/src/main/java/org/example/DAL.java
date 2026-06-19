@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
+import java.util.Scanner;
 
 import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 
@@ -16,6 +17,60 @@ public class DAL {
 
             ps.setString(1, newTerm);
             ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void renewTerm(String renewedTerm, Scanner scanner) {
+        try (Connection conn = JDBC.getConnection()) {
+            ArrayDeque<DailyTerm> expiredTerms = showTerms();
+
+            for (DailyTerm term : expiredTerms) {
+                if (renewedTerm.equalsIgnoreCase(term.term)) {
+                    System.out.print("type 'renew' to confirm: ");
+                    String input = scanner.nextLine();
+                    if (input.equals("renew")) {
+                        PreparedStatement ps = conn.prepareStatement("UPDATE dailyTerms SET renewed_date = NOW() WHERE term = ?;");
+                        ps.setString(1, renewedTerm);
+                        ps.executeUpdate();
+                        System.out.println("It has been renewed");
+                        return;
+                    } else {
+                        System.out.println("seems you've changed your mind");
+                    }
+                    break;
+                }
+            }
+            System.out.println("term does not exist in database.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeTerm(String removedTerm, Scanner scanner) {
+        try (Connection conn = JDBC.getConnection()) {
+            ArrayDeque<DailyTerm> currentTerms = showTerms();
+            
+            for (DailyTerm term : currentTerms) {
+                if (removedTerm.equalsIgnoreCase(term.term)) {
+                    System.out.print("type 'remove' to confirm: ");
+                    String input = scanner.nextLine();
+                    if (input.equals("remove")) {
+                        //remove term MySQL string
+                        PreparedStatement ps = conn.prepareStatement("DELETE FROM dailyTerms WHERE term = ?;");
+                        ps.setString(1, removedTerm);
+                        ps.executeUpdate();
+                        System.out.println("It has been removed from the list");
+                        return;
+                    } else {
+                        System.out.println("seems you've changed your mind");
+                    }
+                    break;
+                } 
+            }
+            System.out.println("term does not exist in database.");
 
         } catch (SQLException e) {
             e.printStackTrace();
