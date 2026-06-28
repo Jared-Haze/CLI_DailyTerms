@@ -33,7 +33,7 @@ public class App {
 
     public static void homeScreen(Scanner scanner) {
         termsDisplay();
-        System.out.print("\ntype anything to see CLI Daily Terms options:");
+        System.out.print("type anything to see CLI Daily Terms options:");
         scanner.nextLine();
         
         System.out.println("\nType + enter...\nA: add term\nB: remove term\nC: show expired terms\nQ: quit program");
