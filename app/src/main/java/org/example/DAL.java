@@ -49,6 +49,47 @@ public class DAL {
         }
     }
 
+    public static void editTerm(String editedTerm, Scanner scanner) {
+        try (Connection conn = JDBC.getConnection()) {
+            ArrayDeque<DailyTerm> allTerms = showTerms();
+
+            for (DailyTerm term : allTerms) {
+                if (editedTerm.equalsIgnoreCase(term.term)) {
+                    String sql = "UPDATE dailyTerms SET term = ? WHERE term = ?";
+                    String sql2 = "UPDATE dailyTerms SET bMaterial = ? WHERE term = ?";
+                    
+                    System.out.println("enter (A) to edit term, (B) to edit b-material...");
+                    String choice = scanner.nextLine();
+                    switch (choice) {
+                        case "a" -> {
+                            System.out.println("enter replacement term: ");
+                            String replacementTerm = scanner.nextLine();
+                            System.out.println("your new replaced term is: " + replacementTerm);
+                            PreparedStatement ps = conn.prepareStatement(sql);
+                            ps.setString(1, replacementTerm);
+                            ps.setString(2, term.term);
+                            ps.executeUpdate();
+                        }
+                        case "b" -> {
+                            System.out.println("enter replacement b-material/description: ");
+                            String replacementBMaterial = scanner.nextLine();
+                            System.out.println("your new replaced b-material is: " + replacementBMaterial);
+                            PreparedStatement ps = conn.prepareStatement(sql2);
+                            ps.setString(1, replacementBMaterial);
+                            ps.setString(2, term.term);
+                            ps.executeUpdate();
+                        }
+                        default -> System.out.println("invalid choice");
+                    }
+                    return;
+                }
+            }
+            System.out.println("that term does not exist");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void removeTerm(String removedTerm, Scanner scanner) {
         try (Connection conn = JDBC.getConnection()) {
             ArrayDeque<DailyTerm> currentTerms = showTerms();
@@ -86,7 +127,7 @@ public class DAL {
             ResultSet rs = ps.executeQuery();
             DailyTerm term;
             while (rs.next()){
-                term = new DailyTerm(rs.getString("term"), rs.getTimestamp("created_date").toLocalDateTime(), rs.getTimestamp("renewed_date").toLocalDateTime());
+                term = new DailyTerm(rs.getString("term"), rs.getTimestamp("created_date").toLocalDateTime(), rs.getTimestamp("renewed_date").toLocalDateTime(), rs.getString("bMaterial"));
                 currentTerms.add(term);
             }
             

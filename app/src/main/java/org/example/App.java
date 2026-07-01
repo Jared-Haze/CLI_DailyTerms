@@ -36,19 +36,41 @@ public class App {
         System.out.print("type anything to see CLI Daily Terms options:");
         scanner.nextLine();
         
-        System.out.println("\nType + enter...\nA: add term\nB: remove term\nC: show expired terms\nQ: quit program");
+        System.out.println("\nType + enter...\nA: add term\nB: remove term\nC: show expired terms\nD: view term b-material\nE: edit term/b-material\nQ: quit program");
         String choiceInput = scanner.nextLine();
 
         switch (choiceInput.toUpperCase().strip()) {
             case "A" -> appAddTerm(scanner);
             case "B" -> appRemoveTerm(scanner);
             case "C" -> appShowExpired(scanner);
+            case "D" -> bMaterialDisplay(scanner);
+            case "E" -> edit(scanner);
             case "Q" -> quitProgram(scanner);
             default -> {
                 System.out.println("Invalid choice.");
                 homeScreen(scanner);
             }
         }
+    }
+
+    public static void bMaterialDisplay(Scanner scanner) {
+        ArrayDeque<DailyTerm> termsList = DAL.showTerms();
+        System.out.println("Enter the term/phrase you like to see the description/bonus material for:");
+        String choice = scanner.nextLine();
+        for (DailyTerm DailyTerm : termsList) {
+            if (choice.equals(DailyTerm.term)) {
+                System.out.println("\n---Bonus-Material------------------");
+                System.out.println(DailyTerm.bMaterial + "\n");
+                return;
+            } 
+        }
+        System.out.println("That term does not exist");
+    }
+
+    public static void edit(Scanner scanner) {
+        System.out.println("enter the term you'd like to edit:");
+        String term = scanner.nextLine();
+        DAL.editTerm(term, scanner);
     }
 
     public static void termsDisplay() {
