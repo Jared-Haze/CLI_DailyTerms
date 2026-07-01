@@ -79,16 +79,24 @@ public class App {
         for (DailyTerm term : termsList) {
 
             Long daysOld = Duration.between(term.renewed_date, LocalDateTime.now()).toDays();
+
+            String bmaterial = "";
+
+            if (term.bMaterial!=null) {
+                bmaterial = " 🅱️ ";
+            }
             
             if (daysOld == 1 || daysOld == 0) {
-                System.out.println("- " + term.term + " [new]");
+                System.out.println("- " + term.term + bmaterial + " [new]");
             } else if (daysOld <= 4) {
-                System.out.println("- " + term.term + " [current]");
+                System.out.println("- " + term.term + bmaterial + " [current]");
             } else if (daysOld < 0) {
-                System.out.println("- " + term.term + " [far out (future)]");
+                System.out.println("- " + term.term + bmaterial + " [far out (future)]");
             } else if (daysOld == 5) {
-                System.out.println("- " + term.term + " [expires soon (last day)]");
+                System.out.println("- " + term.term + bmaterial + " [expires soon (last day)]");
             }
+
+
             
         }
         System.out.println("-----------------------------------");
